@@ -12,9 +12,18 @@ class WebSocket
     public function __construct()
     {
         $this->ws = new Swoole\WebSocket\Server("0.0.0.0", 9502);
-        $this->ws->onOpen();
-        $this->ws->onMessage();
-        $this->ws->onClose();
+        $this->run();
+    }
+
+    /**
+     * boot 启动
+     */
+    public function run()
+    {
+        $this->onOpen();
+        $this->onMessage();
+        $this->onClose();
+        $this->ws->start();
     }
 
     /**
@@ -66,4 +75,4 @@ class WebSocket
 }
 
 $webSocket = new WebSocket();
-$webSocket->start();
+$webSocket->run();
