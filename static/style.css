@@ -1,0 +1,67 @@
+.main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /*border: 1px solid red*/
+    overflow: hidden;
+}
+
+.main .dom-div {
+    width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.message {
+    margin-left: 10px;
+    height: 25px;
+    width: 450px;
+}
+
+.main .dialog {
+    width: 300px;
+    height: 40px;
+    position: absolute;
+    overflow: hidden;
+    color: #000;
+    font-size: 16px;
+    line-height: 30px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.content {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 300px;
+}
+
+.content .row {
+    display: none;
+    margin-bottom: 10px;
+}
+.content .row .profile {
+    font-size: 12px;
+}
+.content .r-row {
+    display: none;
+    margin-bottom: 10px;
+}
+.content .r-row .profile {
+    font-size: 12px;
+    width: 100%;
+    text-align: right;
+}
+.content .r-row .word {
+    text-align: right;
+}
+.word {
+    font-size: 14px;
+    width: 100%;
+}
+.send {
+    height:28px;
+    width:75px
+}
