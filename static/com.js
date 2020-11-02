@@ -24,7 +24,7 @@ $(function () {
 function beginSocket() {
     if (window.WebSocket) {
         // connect,that address refer to swoole.php 连接,这里的地址要对应swoole.php里面定义的地址和端口
-        var webSocket = new WebSocket("ws://192.168.101.150:9502")
+        var webSocket = new WebSocket("ws://192.168.31.254:9502?token=123456")
         console.log(1212, webSocket)
 
         // open 开启事件
