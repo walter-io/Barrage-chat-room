@@ -1,10 +1,12 @@
 $(function () {
     // define name 进来先写名字
     var name = $("input[name=user_name]")
-    if (name.val() == "") {
-        var name_ipt = prompt("please input your name 请输入名字")
-        name.val(name_ipt)
-    }
+    // if (name.val() == "") {
+    //     var name_ipt = prompt("please input your name 请输入名字")
+    //     name.val(name_ipt)
+    // }
+    // 自动分配名称
+    name.val("百里玄策")
 
     // websocket 开启websocket
     var webSocket = beginSocket()

@@ -5,6 +5,8 @@
  * refer to: https://wiki.swoole.com/#/start/start_ws_server
  */
 
+namespace MySwoole;
+
 class WebSocket
 {
     protected $ws;
@@ -33,6 +35,8 @@ class WebSocket
     {
         // Happens when open websocket 监听WebSocket连接打开事件
         $this->ws->on('open', function ($ws, $request) {
+            // 用户信息
+            $clientInfo = $ws->getClientInfo($request->fd);
             $ws->push($request->fd, $this->encodeStruct(0, '', [
                 'name' => '',
                 'content' => "ready? it's coming 准备好了吗，来咯来咯"
@@ -106,5 +110,5 @@ class WebSocket
     }
 }
 
-$webSocket = new WebSocket();
-$webSocket->run();
+//$webSocket = new WebSocket();
+//$webSocket->run();
