@@ -15,8 +15,11 @@ $(function () {
 
     // click send message 点击发送消息
     $(".send").on("click", function() {
-        var data = $(".message").val()
-        webSocket.send(name.val() + "|" + data)
+        var data = {
+            name: name.val(),
+            content: $(".message").val()
+        }
+        webSocket.send(Base64.encode(JSON.stringify(data)))
     })
 })
 
@@ -24,8 +27,8 @@ $(function () {
 function beginSocket() {
     if (window.WebSocket) {
         // connect,that address refer to swoole.php 连接,这里的地址要对应swoole.php里面定义的地址和端口
-        var webSocket = new WebSocket("ws://192.168.31.254:9502?token=123456")
-        console.log(1212, webSocket)
+        var webSocket = new WebSocket("ws://www.mychat.com:9502") // 修改这里可能有缓存
+        console.log('websocket: ', webSocket)
 
         // open 开启事件
         webSocket.onopen = function (event) {
@@ -48,25 +51,25 @@ function beginSocket() {
  */
 function onMessage(event) {
     var content = $(".content")
-    var res = event.data.split("|")
-    if (res[1] != undefined && res[0] == $("input[name=user_name]").val()) {
+    // data = JSON.parse(Base64.decode(event.data))
+    // data = JSON.parse(window.atob(event.data))
+    data = JSON.parse(window.atob(event.data))
+    res = data.data
+    console.log('result', res)
+    if (res.content != undefined && res.name == $("input[name=user_name]").val()) {
         // own message 自己发的消息
         var temp = $(".r-row-temp").clone().eq(0)
-        var userName = res[0]
-        var msg = res[1]
     } else {
         // other's message 别人发的消息
         var temp = $(".row-temp").clone().eq(0)
-        var userName = res[0]
-        var msg = res[1]
     }
-    temp.find(".word").html(msg)
-    temp.find(".username").html(userName)
+    temp.find(".word").html(res.content)
+    temp.find(".username").html(res.name)
     temp.css("display", "block")
     // append to chat div 添加到聊天框
     content.append(temp)
     // bullet screen 发弹幕
-    bulletScreen(msg)
+    bulletScreen(res.content)
 }
 
 /**

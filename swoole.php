@@ -33,7 +33,10 @@ class WebSocket
     {
         // Happens when open websocket 监听WebSocket连接打开事件
         $this->ws->on('open', function ($ws, $request) {
-            $ws->push($request->fd, "ready? it's coming 准备好了吗，来咯来咯" . PHP_EOL);
+            $ws->push($request->fd, $this->encodeStruct(0, '', [
+                'name' => '',
+                'content' => "ready? it's coming 准备好了吗，来咯来咯"
+            ]));
         });
     }
 
@@ -43,20 +46,22 @@ class WebSocket
     public function onMessage()
     {
         $this->ws->on('message', function ($ws, $frame) {
-            $msg = $frame->data . PHP_EOL;
+            $receive = $this->getData($frame->data);
             // Sends a message to all connected windows
             $start_fd = 0;
             while (true) {
                 // connection_list函数获取现在连接中的fd
-                $conn_list = $ws->connection_list($start_fd, 100);   // 获取从fd之后一百个进行发送
+                $conn_list = $ws->connection_list($start_fd);
                 if ($conn_list === false || count($conn_list) === 0) {
                     echo "finish" . PHP_EOL;
                     return;
                 }
-
                 $start_fd = end($conn_list);
                 foreach ($conn_list as $fd) {
-                    $ws->push($fd, $msg);
+                    $ws->push($fd, $this->encodeStruct('0', '', [
+                        'name'    => $receive['name'],
+                        'content' => $receive['content']
+                    ]));
                 }
             }
         });
@@ -68,9 +73,36 @@ class WebSocket
     public function onClose()
     {
         $this->ws->on('close', function ($ws, $fd) {
-            echo "client-{$fd} is closed\n";
+//            echo "client-{$fd} is closed\n";
             $ws->close($fd);   // 销毁fd链接信息
         });
+    }
+
+    /**
+     * 返回结构加密
+     * @param string $code
+     * @param string $msg
+     * @param array
+     * @return string
+     */
+    public function encodeStruct($code = '0', $msg = '', $data = [])
+    {
+        $result = [
+            'code' => $code,
+            'msg'  => $msg,
+            'data' => $data,
+        ];
+        return base64_encode(json_encode($result));
+    }
+
+    /**
+     * 返回结构解密
+     * @param $data
+     * @return mixed
+     */
+    public function getData($data)
+    {
+        return json_decode(base64_decode($data), true);
     }
 }
 
